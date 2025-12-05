@@ -3,6 +3,9 @@
 import React, { useState } from 'react'
 import { useWidgetsStore } from '@/src/store/widgetsStore'
 import AddWidgetModal from '@/src/components/widgets/AddWidgetModal'
+import FinanceCard from '@/src/components/widgets/FinanaceCard'
+import LineChartWidget from "@/src/components/widgets/LineChartWidget"
+import TableWidget from "@/src/components/widgets/TableWidget"
 
 export default function DashboardPage() {
   const widgets = useWidgetsStore((s) => s.widgets)
@@ -32,15 +35,24 @@ export default function DashboardPage() {
           widgets.map((w) => (
             <div key={w.id} className="col-span-4">
               <div className="p-4 bg-white rounded shadow">
+                
                 <h3 className="font-medium">{w.title}</h3>
                 <p className="text-sm text-gray-500">
                   {w.type} • {w.symbol}
                 </p>
 
-                {/* Placeholder for Step 3 (data fetching) */}
-                <div className="mt-4 text-gray-400 text-sm">
-                  Data loading will appear here in Step 3...
-                </div>
+                {w.type === "card" && (
+                    <FinanceCard symbol={w.symbol} refresh={w.refresh} />
+                )}
+
+                {w.type === "chart" && (
+                    <LineChartWidget symbol={w.symbol} refresh={w.refresh} />
+                )}
+
+                {w.type === "table" && (
+                    <TableWidget refresh={w.refresh} />
+                )}
+
               </div>
             </div>
           ))
