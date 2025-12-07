@@ -21,6 +21,7 @@ type WidgetsState = {
   addWidget: (w: Omit<Widget, 'id'>) => void
   updateWidget: (id: string, patch: Partial<Widget>) => void
   removeWidget: (id: string) => void
+  reorderWidgets: (newOrder: Widget[]) => void
   clearAll: () => void
 }
 
@@ -31,10 +32,12 @@ export const useWidgetsStore = create<WidgetsState>()(
       addWidget: (w) =>
         set((s) => ({ widgets: [...s.widgets, { ...w, id: nanoid() }] })),
       updateWidget: (id, patch) =>
-        set((s) => ({ widgets: s.widgets.map(w => w.id === id ? { ...w, ...patch } : w) })),
+        set((s) => ({ widgets: s.widgets.map((w) => w.id === id ? { ...w, ...patch } : w) })),
       removeWidget: (id) =>
-        set((s) => ({ widgets: s.widgets.filter(w => w.id !== id) })),
+        set((s) => ({ widgets: s.widgets.filter((w) => w.id !== id) })),
       clearAll: () => set({ widgets: [] }),
+      reorderWidgets: (newOrder: Widget[]) =>
+        set(() => ({ widgets: newOrder })),
     }),
     {
       name: 'finboard-widgets', // localStorage key
